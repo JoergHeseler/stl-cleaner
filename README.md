@@ -2,17 +2,17 @@
 
 This repository provides a script that converts ASCII and binary Standard Tessellation Language (STL) files specified at https://www.fabbers.com/tech/STL_Format.
 
-# What It Does
+## What It Does
 
 This script validates and corrects STL files (both ASCII and binary formats) by checking the geometric integrity of facets, ensuring counterclockwise vertex ordering, and repositioning the model to a defined minimum position if needed. It also verifies consistency between solid and endsolid names in ASCII files and outputs a cleaned, corrected version of the STL file.
 
-# Usage
+## Usage
 
 1. Download [**stl-corrector.py**](./src/stl-corrector.py).
 
 2. In the command line run `python stl-corrector.py <STL file> [options]`
 
-## Command line switches
+### Command line switches
 
 | Option/Parameter               | Description                                          |
 | ------------------------------ | ---------------------------------------------------- |
@@ -22,7 +22,7 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 | `--force-repos`                | always repositions the model to the minimum position |
 | `--ignore-endsolid-name`       | only considers the solid name                        |
 
-# Dependencies
+## Dependencies
 
 [Python 2.4](https://www.python.org/download/releases/2.4/) or higher.
 
