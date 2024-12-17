@@ -1,4 +1,4 @@
-# STL Corrector
+# STL Cleaner
 
 This repository provides a script that converts ASCII and binary Standard Tessellation Language (STL) files specified at https://www.fabbers.com/tech/STL_Format.
 
@@ -8,9 +8,9 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 
 ## Usage
 
-1. Download [**stl-corrector.py**](./src/stl-corrector.py).
+1. Download [**stl-cleaner.py**](./src/stl-cleaner.py).
 
-2. In the command line run `python stl-corrector.py <STL file> [options]`
+2. In the command line run `python stl-cleaner.py <STL file> [options]`
 
 ### Command line switches
 
