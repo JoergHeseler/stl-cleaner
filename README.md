@@ -8,11 +8,7 @@ This repository provides a script that converts ASCII and binary Standard Tessel
 
 2. In the command line run `python stl-corrector.py <STL file> [options]`
 
-# Dependencies
-
-Python 2.4 or higher.
-
-# Command line switches
+## Command line switches
 
 | Option/Parameter               | Description                                          |
 | ------------------------------ | ---------------------------------------------------- |
@@ -21,3 +17,7 @@ Python 2.4 or higher.
 | `--min-pos=<minimum position>` | mininum allowed model position, default=0.1,0.1,0.1  |
 | `--force-repos`                | always repositions the model to the minimum position |
 | `--ignore-endsolid-name`       | only considers the solid name                        |
+
+# Dependencies
+
+[Python 2.4](https://www.python.org/download/releases/2.4/) or higher.
