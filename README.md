@@ -2,6 +2,16 @@
 
 This repository provides a script that converts ASCII and binary Standard Tessellation Language (STL) files specified at https://www.fabbers.com/tech/STL_Format.
 
+# Usage
+
+1. Download **stl-corrector.py** from here.
+
+2. In the command line run `python stl-corrector.py <STL file> [options]`
+
+# Dependencies
+
+Python 2.4 or higher.
+
 # Command line switches
 
 | Option/Parameter               | Description                                          |
