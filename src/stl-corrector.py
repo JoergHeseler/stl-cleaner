@@ -1,4 +1,4 @@
-# Title: stl-corrector
+# Title: stl-cleaner
 # Version: 1.0.0
 # Publisher: NFDI4Culture
 # Publication date: December 16, 2024
@@ -90,7 +90,7 @@ def handle_error_with_line_index(type, expected, got = None):
             error_message = f"Error on line {line_index + 1}: Expected '{expected}' but got '{got.strip()}'."
         else:
             error_message = f"Error on line {line_index + 1}: {expected}."
-        raise STLValidatorException(error_message)
+        raise STLCleanerException(error_message)
     elif type == WARNING:
         # Warning
         warning_count += 1
@@ -109,7 +109,7 @@ def handle_error_with_file_pos(type, pos, expected, got = None):
             error_message = f"Error on position {pos}: Expected '{expected}' but got '{got.strip()}'."
         else:
             error_message = f"Error on position {pos}: {expected}."
-        raise STLValidatorException(error_message)
+        raise STLCleanerException(error_message)
     elif type == WARNING:
         # Warning
         warning_count += 1
@@ -156,7 +156,7 @@ def is_binary_stl(file_path):
 
 ######################## VALIDATION FUNCTIONS ########################
 
-class STLValidatorException(Exception):
+class STLCleanerException(Exception):
     
     def __init__(self, result):
         super().__init__(result)
@@ -373,7 +373,7 @@ def validate_ascii_stl_file(input_file_path, output_file_path):
         fixed_file.writelines(line + '\n' for line in fixed_lines)
     
 
-def correct_stl_file(input_file_path, output_file_path):
+def clean_stl_file(input_file_path, output_file_path):
     global error_count, warning_count, first_error_message
     try:
         if is_binary_stl(input_file_path):
@@ -384,13 +384,13 @@ def correct_stl_file(input_file_path, output_file_path):
             version = 'ASCII'
 
         if error_count > 0:
-            raise STLValidatorException(f"Validation failed: errors={error_count}, warnings={warning_count}, first error: {first_error_message}")
+            raise STLCleanerException(f"Validation failed: errors={error_count}, warnings={warning_count}, first error: {first_error_message}")
         
-        print('Corrected STL successfully stored to', output_file_path)
+        print('Cleaned STL successfully stored to', output_file_path)
         
         return SUCCESS_CODE
 
-    except STLValidatorException as e:
+    except STLCleanerException as e:
         print(e, file=sys.stderr)
         return ERROR_CODE
 
@@ -399,11 +399,11 @@ def correct_stl_file(input_file_path, output_file_path):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print(f'STL Corrector, version 1.0.0')
+        print(f'STL Cleaner, version 1.0.0')
         print()
         print(f'This script converts ASCII and binary STL files specified at https://www.fabbers.com/tech/STL_Format.')
         print()
-        print(f'Usage: python stl-corrector.py <STL file> [options]')
+        print(f'Usage: python stl-cleaner.py <STL file> [options]')
         print()
         print(f'--o=<output file path>               path to the corrected output STL file')
         print(f'--indent=<number of spaces>          indentation spaces, default={indent_spaces}')
@@ -430,4 +430,4 @@ if __name__ == "__main__":
     if input_file_path == output_file_path:
         print("Input and output files must not be the same.", file=sys.stderr)
         sys.exit(1)
-    sys.exit(correct_stl_file(input_file_path, output_file_path))
+    sys.exit(clean_stl_file(input_file_path, output_file_path))
