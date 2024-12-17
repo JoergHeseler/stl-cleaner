@@ -413,19 +413,19 @@ if __name__ == "__main__":
         sys.exit(0)
     # output_detailed_warnings = any(arg.strip().lower() == "--warnings" for arg in sys.argv)
     input_file_path = sys.argv[1]
-    output_file_path = re.sub(r'\.stl$', '-fixed.stl' , input_file_path)
+    output_file_path = re.sub(r'\.stl$', '-cleaned.stl' , input_file_path)
     for arg in sys.argv: 
         if arg.strip().lower() == '--force-repos':
             force_repositioning = True
-        if arg.strip().lower().startswith('--o='):
+        elif arg.strip().lower().startswith('--o='):
             output_file_path = arg.split('=')[1]
             # print('Output file: ', output_file_path)
-        if arg.strip().lower().startswith('--indent='):
+        elif arg.strip().lower().startswith('--indent='):
             indent_spaces = int(arg.split('=')[1])
-        if arg.strip().lower().startswith('--min-pos='):
+        elif arg.strip().lower().startswith('--min-pos='):
             v = arg.split('=')[1].split(',')
             new_min_pos = [float(v[0]), float(v[1]), float(v[2])]
-        if arg.strip().lower() == '--ignore-endsolid-name':
+        elif arg.strip().lower() == '--ignore-endsolid-name':
             ignore_endsolid_name = True
     if input_file_path == output_file_path:
         print("Input and output files must not be the same.", file=sys.stderr)
