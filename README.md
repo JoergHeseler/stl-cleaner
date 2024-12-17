@@ -14,13 +14,13 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 
 ### Command line switches
 
-| Option/Parameter               | Description                                          |
-| ------------------------------ | ---------------------------------------------------- |
-| `--o=<output file path>`       | path to the corrected output STL file output         |
-| `--indent=<number of spaces>`  | indentation spaces, default=2                        |
-| `--min-pos=<minimum position>` | mininum allowed model position, default=0.1,0.1,0.1  |
-| `--force-repos`                | always repositions the model to the minimum position |
-| `--ignore-endsolid-name`       | only considers the solid name                        |
+| Option/Parameter               | Description                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `--o=<output file path>`       | path to the corrected output STL file output           |
+| `--indent=<number of spaces>`  | indentation spaces, default=2                          |
+| `--min-pos=<minimum position>` | mininum allowed model position, default=0.01,0.01,0.01 |
+| `--force-repos`                | always repositions the model to the minimum position   |
+| `--ignore-endsolid-name`       | only considers the solid name                          |
 
 ## Dependencies
 
