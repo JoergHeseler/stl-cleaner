@@ -20,7 +20,7 @@ DEBUG = 1
 force_repositioning = False
 new_min_pos = [0.01, 0.01, 0.01]
 ignore_endsolid_name = False
-indent_spaces = 2
+indent_spaces = 1
 ERROR = True
 WARNING = False
 
