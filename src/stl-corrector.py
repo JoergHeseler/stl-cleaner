@@ -401,10 +401,10 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(f'STL Corrector, version 1.0.0')
         print()
-        print(f'This script converts ASCII and binary STL files according to the specifications of https://www.fabbers.com/tech/STL_Format.')
+        print(f'This script converts ASCII and binary STL files specified at https://www.fabbers.com/tech/STL_Format.')
         print()
         print(f'Usage: python stl-corrector.py <STL file> [options]')
-        print()        
+        print()
         print(f'--o=<output file path>               path to the corrected output STL file')
         print(f'--indent=<number of spaces>          indentation spaces, default={indent_spaces}')
         print(f'--min-pos=<minimum position>         mininum allowed model position, default={new_min_pos[0]},{new_min_pos[1]},{new_min_pos[2]}')
