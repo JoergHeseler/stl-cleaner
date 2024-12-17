@@ -4,7 +4,7 @@ This repository provides a script that converts ASCII and binary Standard Tessel
 
 # Usage
 
-1. Download [**stl-corrector.py**](./tree/main/src/stl-corrector.py).
+1. Download [**stl-corrector.py**](./src/stl-corrector.py).
 
 2. In the command line run `python stl-corrector.py <STL file> [options]`
 
