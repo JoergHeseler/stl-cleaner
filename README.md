@@ -14,7 +14,7 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 
 ### Command line switches
 
-| Option/Parameter               | Description                                            |
+| Option                         | Description                                            |
 | ------------------------------ | ------------------------------------------------------ |
 | `--o=<output file path>`       | path to the corrected output STL file output           |
 | `--indent=<number of spaces>`  | indentation spaces, default=2                          |
