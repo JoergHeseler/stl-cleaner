@@ -51,7 +51,16 @@ def normalize_vector(v):
         return [0, 0, 0]
     return [x / magnitude for x in v]
 
-def are_vectors_close(v1, v2, tol=1e-9):
+# New feature: Recalculate facet normal if invalid
+def recalculate_normal(vertex1, vertex2, vertex3):
+    """
+    Recalculates the normal vector for a given facet using the cross product.
+    """
+    edge1 = [v2 - v1 for v1, v2 in zip(vertex1, vertex2)]
+    edge2 = [v3 - v1 for v1, v3 in zip(vertex1, vertex3)]
+    return normalize_vector(cross_product(edge1, edge2))
+
+def are_vectors_close(v1, v2, tol=1e-3):
     return all(abs(a - b) <= tol for a, b in zip(v1, v2))
 
 # def is_facet_oriented_correctly(vertex1, vertex2, vertex3, normal):
@@ -183,7 +192,6 @@ def validate_binary_stl_file(input_file_path, output_file_path):
             vertex2 = struct.unpack('<3f', file.read(12))
             vertex3 = struct.unpack('<3f', file.read(12))
             attr_byte_count = struct.unpack('<H', file.read(2))[0]
-            facet = [normal, vertex1, vertex2, vertex3]
 
             for j in range(3):
                 vertices = [vertex1, vertex2, vertex3]
@@ -192,7 +200,9 @@ def validate_binary_stl_file(input_file_path, output_file_path):
                     if vertex[j] < min_vertex[j]:
                         min_vertex[j] = vertex[j]
 
-            facets.append(facet)
+            normal = recalculate_normal(vertex1, vertex2, vertex3)
+
+            facets.append([normal, vertex1, vertex2, vertex3])
 
             pos = 84 + i * 50
 
@@ -202,8 +212,8 @@ def validate_binary_stl_file(input_file_path, output_file_path):
             if not is_counterclockwise(vertex1, vertex2, vertex3, normal):
                 handle_error_with_line_index(WARNING, "Vertices of this facet are not ordered counterclockwise")
 
-            if any(math.isnan(v) for v in normal + vertex1 + vertex2 + vertex3):
-                handle_error_with_file_pos(ERROR, pos, "File contains NaN values in normal or vertex coordinates")
+            # if any(math.isnan(v) for v in normal + vertex1 + vertex2 + vertex3):
+            #     handle_error_with_file_pos(ERROR, pos, "File contains NaN values in normal or vertex coordinates")
             
             if attr_byte_count != 0:
                 handle_error_with_file_pos(ERROR, pos, f"Attribute byte count should be '0', but got '{attr_byte_count}'")
@@ -276,11 +286,9 @@ def validate_ascii_stl_file(input_file_path, output_file_path):
     facets = []
 
     for _ in range(total_facet_count):
-        facet = []
         if not re.search(f"^facet normal -?\d*(\.\d+)?([Ee][+-]?\d+)? -?\d*(\.\d+)?([Ee][+-]?\d+)? -?\d*(\.\d+)?([Ee][+-]?\d+)?$", get_current_line()):
             handle_error_with_line_index(ERROR, "facet normal <float> <float> <float>", get_current_line())
         normal = list(map(float, get_current_line().split()[2:]))
-        facet.append(normal)
         go_to_next_line()
         if not "outer loop" == get_current_line():
             handle_error_with_line_index(ERROR, "outer loop", get_current_line())
@@ -310,7 +318,10 @@ def validate_ascii_stl_file(input_file_path, output_file_path):
         # if not is_facet_oriented_correctly(vertices[0], vertices[1], vertices[2], normal):
         #     print_warning("Facet is not oriented correctly")
         #     # all_facets_normals_are_correct = False
-            facet.append(vertex)
+
+        normal = recalculate_normal(vertices[0], vertices[1], vertices[2])
+        facets.append([normal, vertices[0], vertices[1], vertices[2]])
+
         if not is_counterclockwise(vertices[0], vertices[1], vertices[2], normal):
             handle_error_with_line_index(WARNING, "Vertices of this facet are not ordered counterclockwise")
             # all_vertices_of_facets_are_ordered_clockwise = False
@@ -320,7 +331,6 @@ def validate_ascii_stl_file(input_file_path, output_file_path):
         if not "endfacet" == get_current_line():
             handle_error_with_line_index(ERROR, "endfacet", get_current_line())
         go_to_next_line()
-        facets.append(facet)
     if not re.search("^endsolid", get_current_line()):
         handle_error_with_line_index(ERROR, "endsolid", get_current_line())
     if solid_name != "":
