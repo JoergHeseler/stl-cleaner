@@ -84,64 +84,52 @@ def is_counterclockwise(vertex1, vertex2, vertex3, normal):
     calculated_normal = cross_product(edge1, edge2)
     return dot_product(calculated_normal, normal) > 0
 
-def make_model_manifold(facets):
-    """
-    Ensures the manifoldness of the model by applying the vector-to-vector rule.
-    This involves fixing open edges and removing duplicate facets.
-    """
-    edge_to_facets = {}
-    fixed_facets = []
-    open_edges = []
+# def make_model_manifold(facets):
+#     """
+#     Ensures the manifoldness of the model by applying the vector-to-vector rule.
+#     This involves fixing open edges and removing duplicate facets.
+#     """
+#     edge_to_facets = {}
+#     fixed_facets = []
+#     open_edges = []
 
-    # Step 1: Track edges and their associated facets
-    for facet in facets:
-        edges = [
-            tuple(sorted((tuple(facet[1]), tuple(facet[2])))),
-            tuple(sorted((tuple(facet[2]), tuple(facet[3])))),
-            tuple(sorted((tuple(facet[3]), tuple(facet[1]))))
-        ]
-        for edge in edges:
-            if edge not in edge_to_facets:
-                edge_to_facets[edge] = []
-            edge_to_facets[edge].append(facet)
+#     # Step 1: Track edges and their associated facets
+#     for facet in facets:
+#         edges = [
+#             tuple(sorted((tuple(facet[1]), tuple(facet[2])))),
+#             tuple(sorted((tuple(facet[2]), tuple(facet[3])))),
+#             tuple(sorted((tuple(facet[3]), tuple(facet[1]))))
+#         ]
+#         for edge in edges:
+#             if edge not in edge_to_facets:
+#                 edge_to_facets[edge] = []
+#             edge_to_facets[edge].append(facet)
 
-    # Step 2: Identify and handle open edges
-    for edge, associated_facets in edge_to_facets.items():
-        if len(associated_facets) == 1:
-            open_edges.append(edge) # Open edge found
+#     # Step 2: Identify and handle open edges
+#     for edge, associated_facets in edge_to_facets.items():
+#         if len(associated_facets) == 1:
+#             open_edges.append(edge) # Open edge found
 
-    # Step 3: Close open edges
-    for edge in open_edges:
-        v1, v2 = edge
-        # Find a vertex close to the open edge to form a new triangle
-        for other_edge in open_edges:
-            if v2 in other_edge and edge != other_edge:
-                v3 = other_edge[0] if other_edge[1] == v2 else other_edge[1]
-                new_normal = recalculate_normal(v1, v2, v3)
-                new_facet = [new_normal, v1, v2, v3]
-                fixed_facets.append(new_facet)
-                break
+#     # Step 3: Close open edges
+#     for edge in open_edges:
+#         v1, v2 = edge
+#         # Find a vertex close to the open edge to form a new triangle
+#         for other_edge in open_edges:
+#             if v2 in other_edge and edge != other_edge:
+#                 v3 = other_edge[0] if other_edge[1] == v2 else other_edge[1]
+#                 new_normal = recalculate_normal(v1, v2, v3)
+#                 new_facet = [new_normal, v1, v2, v3]
+#                 fixed_facets.append(new_facet)
+#                 break
 
-    # Step 4: Remove duplicate facets
-    unique_facets = {tuple(tuple(vertex) for vertex in facet) for facet in (facets + fixed_facets)}
-    manifold_facets = [list(map(list, facet)) for facet in unique_facets]
+#     # Step 4: Remove duplicate facets
+#     unique_facets = {tuple(tuple(vertex) for vertex in facet) for facet in (facets + fixed_facets)}
+#     manifold_facets = [list(map(list, facet)) for facet in unique_facets]
 
-    return manifold_facets
+#     return manifold_facets
 
 
 def is_model_manifold(facets):
-    """
-    Checks if a 3D model is manifold.
-    A model is manifold if each edge is shared by exactly two triangles.
-    
-    Parameters:
-        facets (list): List of facets, where each facet is a list of 4 elements:
-                       [normal, vertex1, vertex2, vertex3].
-    
-    Returns:
-        bool: True if the model is manifold, False otherwise.
-        dict: A report containing details about non-manifold edges, if any.
-    """
     edge_usage = {}
 
     # Step 1: Count usage of each edge
@@ -306,10 +294,15 @@ def clean_binary_stl_file(input_file_path, output_file_path):
                 handle_error_with_file_pos(ERROR, pos, f"Attribute byte count should be '0', but got '{attr_byte_count}'")
 
     
-        # Close holes in the model
-        facets = make_model_manifold(facets)
-        # print(is_model_manifold(facets))
+        print("Original minimum coordinates:", min_vertex)
 
+        # Close holes in the model
+        # facets = make_model_manifold(facets)
+        if not is_model_manifold(facets):
+            output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
+            handle_error_with_line_index(WARNING, "Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool")
+        else:
+            print("Model is manifold.")
 
         with open(output_file_path, 'wb') as fixed_file:
             fixed_file.write(header)
@@ -435,12 +428,18 @@ def clean_ascii_stl_file(input_file_path, output_file_path):
     else:
         endsolid_name = str(get_current_line()[6:]).lstrip()
 
-    # Close holes in the model
-    facets = make_model_manifold(facets)
-
-
     go_to_next_line()
-    print("Minimum coordinates found:", min_vertex)
+
+    print("Original minimum coordinates:", min_vertex)
+
+    # Close holes in the model
+    # facets = make_model_manifold(facets)
+    if not is_model_manifold(facets):
+        output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
+        handle_error_with_line_index(WARNING, "Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool")
+    else:
+        print("Model is manifold.")
+
 
     name = solid_name
     if not ignore_endsolid_name:
@@ -486,10 +485,10 @@ def clean_stl_file(input_file_path, output_file_path):
     try:
         if is_binary_stl(input_file_path):
             clean_binary_stl_file(input_file_path, output_file_path)
-            version = 'binary'
+            # version = 'binary'
         else:
             clean_ascii_stl_file(input_file_path, output_file_path)
-            version = 'ASCII'
+            # version = 'ASCII'
 
         if error_count > 0:
             raise STLCleanerException(f"Validation failed: errors={error_count}, warnings={warning_count}, first error: {first_error_message}")
