@@ -27,7 +27,7 @@ WARNING = False
 warning_count = 0
 error_count = 0
 first_error_message = ""
-output_detailed_warnings = False 
+output_detailed_warnings = True 
 # stop_on_first_error = False
 
 ######################## GEOMETRY FUNCTIONS ########################
@@ -183,6 +183,8 @@ def handle_error_with_line_index(type, expected, got = None):
                 print(f"Warning on line {line_index + 1}: Expected '{expected}' but got '{got.strip()}'.")
             else:
                 print(f"Warning on line {line_index + 1}: {expected}.")
+    else:
+        print("Unknown error.")
 
 def handle_error_with_file_pos(type, pos, expected, got = None):
     global error_count, warning_count, output_detailed_warnings
@@ -202,6 +204,8 @@ def handle_error_with_file_pos(type, pos, expected, got = None):
                 print(f"Warning on position {pos}: Expected '{expected}' but got '{got.strip()}'.")
             else:
                 print(f"Warning on position {pos}: {expected}.")
+    else:
+        print("Unknown error.")
 
 
 def get_current_line():
@@ -299,8 +303,8 @@ def clean_binary_stl_file(input_file_path, output_file_path):
         # Close holes in the model
         # facets = make_model_manifold(facets)
         if not is_model_manifold(facets):
+            print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
             output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
-            handle_error_with_line_index(WARNING, "Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool")
         else:
             print("Model is manifold.")
 
@@ -329,6 +333,8 @@ def clean_binary_stl_file(input_file_path, output_file_path):
                 fixed_file.write(struct.pack("<3f", *(fixed_vertices[1])))
                 fixed_file.write(struct.pack("<3f", *(fixed_vertices[2])))
                 fixed_file.write(struct.pack("<H", 0)) # Attribute byte count
+
+        print('Cleaned STL successfully stored to', output_file_path)
 
 
 
@@ -435,8 +441,8 @@ def clean_ascii_stl_file(input_file_path, output_file_path):
     # Close holes in the model
     # facets = make_model_manifold(facets)
     if not is_model_manifold(facets):
+        print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
         output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
-        handle_error_with_line_index(WARNING, "Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool")
     else:
         print("Model is manifold.")
 
@@ -478,7 +484,9 @@ def clean_ascii_stl_file(input_file_path, output_file_path):
     fixed_lines.append('endsolid ' + name)
     with open(output_file_path, 'w') as fixed_file:
         fixed_file.writelines(line + '\n' for line in fixed_lines)
-    
+
+    print('Cleaned STL successfully stored to', output_file_path)
+
 
 def clean_stl_file(input_file_path, output_file_path):
     global error_count, warning_count, first_error_message
@@ -492,9 +500,7 @@ def clean_stl_file(input_file_path, output_file_path):
 
         if error_count > 0:
             raise STLCleanerException(f"Validation failed: errors={error_count}, warnings={warning_count}, first error: {first_error_message}")
-        
-        print('Cleaned STL successfully stored to', output_file_path)
-        
+                
         return SUCCESS_CODE
 
     except STLCleanerException as e:
