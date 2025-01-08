@@ -22,9 +22,28 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 | `--force-repos`                | always repositions the model to the minimum position   |
 | `--ignore-endsolid-name`       | only considers the solid name                          |
 
+## Background
+
+As part of the [NFDI4Culture](https://nfdi4culture.de/) initiative, efforts are underway to enhance the capabilities of open-source digital preservation software like Archivematica to identify, validate and preserve 3D file formats. This repository provides a script to enable Graphics Language Transmission Format (glTF) file validation in Archivematica, which is not supported by default in version 1.13.2, enhancing its 3D content preservation capabilities.
+
 ## Dependencies
 
 [Python 2.4](https://www.python.org/download/releases/2.4/) or higher.
+
+## Related projects
+
+- [3D Sample Files for Digital Preservation Testing](https://github.com/JoergHeseler/3d-sample-files-for-digital-preservation-testing)
+- [DAE Validator for Archivematica](https://github.com/JoergHeseler/dae-validator-for-archivematica)
+- [glTF Metadata Extractor for Archivematica](https://github.com/JoergHeseler/gltf-metadata-extractor-for-archivematica)
+- [glTF Validator for Archivematica](https://github.com/JoergHeseler/gltf-validator-for-archivematica)
+  <!-- - [STL Cleaner](https://github.com/JoergHeseler/stl-cleaner) -->
+- [STL Metadata Extractor for Archivematica](https://github.com/JoergHeseler/stl-metadata-extractor-for-archivematica)
+- [STL Validator for Archivematica](https://github.com/JoergHeseler/stl-validator-for-archivematica)
+- [X3D Validator for Archivematica](https://github.com/JoergHeseler/x3d-validator-for-archivematica)
+
+## Acknowledgments
+
+Special thanks to the IT colleagues at the SLUB Dresden for their support and valuable feedback during development.
 
 ## Imprint
 
