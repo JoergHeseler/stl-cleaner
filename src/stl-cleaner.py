@@ -16,7 +16,6 @@ import re
 SUCCESS_CODE = 0
 ERROR_CODE = 1
 DEBUG = 1
-# strict_mode = True
 force_repositioning = False
 new_min_pos = [0.01, 0.01, 0.01]
 ignore_endsolid_name = False
@@ -28,7 +27,6 @@ warning_count = 0
 error_count = 0
 first_error_message = ""
 output_detailed_warnings = True 
-# stop_on_first_error = False
 
 ######################## GEOMETRY FUNCTIONS ########################
 
@@ -63,13 +61,6 @@ def recalculate_normal(vertex1, vertex2, vertex3):
 def are_vectors_close(v1, v2, tol=1e-3):
     return all(abs(a - b) <= tol for a, b in zip(v1, v2))
 
-# def is_facet_oriented_correctly(vertex1, vertex2, vertex3, normal):
-#     edge1 = [v2 - v1 for v1, v2 in zip(vertex1, vertex2)]
-#     edge2 = [v3 - v1 for v1, v3 in zip(vertex1, vertex3)]
-#     calculated_normal = normalize_vector(cross_product(edge1, edge2))
-#     normal = normalize_vector(normal)
-#     return are_vectors_close(calculated_normal, normal)
-
 def ensure_counterclockwise(vertex1, vertex2, vertex3, normal):
     edge1 = [v2 - v1 for v1, v2 in zip(vertex1, vertex2)]
     edge2 = [v3 - v1 for v1, v3 in zip(vertex1, vertex3)]
@@ -84,49 +75,49 @@ def is_counterclockwise(vertex1, vertex2, vertex3, normal):
     calculated_normal = cross_product(edge1, edge2)
     return dot_product(calculated_normal, normal) > 0
 
-# def make_model_manifold(facets):
-#     """
-#     Ensures the manifoldness of the model by applying the vector-to-vector rule.
-#     This involves fixing open edges and removing duplicate facets.
-#     """
-#     edge_to_facets = {}
-#     fixed_facets = []
-#     open_edges = []
+def make_model_manifold(facets):
+    """
+    Ensures the manifoldness of the model by applying the vector-to-vector rule.
+    This involves fixing open edges and removing duplicate facets.
+    """
+    edge_to_facets = {}
+    fixed_facets = []
+    open_edges = []
 
-#     # Step 1: Track edges and their associated facets
-#     for facet in facets:
-#         edges = [
-#             tuple(sorted((tuple(facet[1]), tuple(facet[2])))),
-#             tuple(sorted((tuple(facet[2]), tuple(facet[3])))),
-#             tuple(sorted((tuple(facet[3]), tuple(facet[1]))))
-#         ]
-#         for edge in edges:
-#             if edge not in edge_to_facets:
-#                 edge_to_facets[edge] = []
-#             edge_to_facets[edge].append(facet)
+    # Step 1: Track edges and their associated facets
+    for facet in facets:
+        edges = [
+            tuple(sorted((tuple(facet[1]), tuple(facet[2])))),
+            tuple(sorted((tuple(facet[2]), tuple(facet[3])))),
+            tuple(sorted((tuple(facet[3]), tuple(facet[1]))))
+        ]
+        for edge in edges:
+            if edge not in edge_to_facets:
+                edge_to_facets[edge] = []
+            edge_to_facets[edge].append(facet)
 
-#     # Step 2: Identify and handle open edges
-#     for edge, associated_facets in edge_to_facets.items():
-#         if len(associated_facets) == 1:
-#             open_edges.append(edge) # Open edge found
+    # Step 2: Identify and handle open edges
+    for edge, associated_facets in edge_to_facets.items():
+        if len(associated_facets) == 1:
+            open_edges.append(edge) # Open edge found
 
-#     # Step 3: Close open edges
-#     for edge in open_edges:
-#         v1, v2 = edge
-#         # Find a vertex close to the open edge to form a new triangle
-#         for other_edge in open_edges:
-#             if v2 in other_edge and edge != other_edge:
-#                 v3 = other_edge[0] if other_edge[1] == v2 else other_edge[1]
-#                 new_normal = recalculate_normal(v1, v2, v3)
-#                 new_facet = [new_normal, v1, v2, v3]
-#                 fixed_facets.append(new_facet)
-#                 break
+    # Step 3: Close open edges
+    for edge in open_edges:
+        v1, v2 = edge
+        # Find a vertex close to the open edge to form a new triangle
+        for other_edge in open_edges:
+            if v2 in other_edge and edge != other_edge:
+                v3 = other_edge[0] if other_edge[1] == v2 else other_edge[1]
+                new_normal = recalculate_normal(v1, v2, v3)
+                new_facet = [new_normal, v1, v2, v3]
+                fixed_facets.append(new_facet)
+                break
 
-#     # Step 4: Remove duplicate facets
-#     unique_facets = {tuple(tuple(vertex) for vertex in facet) for facet in (facets + fixed_facets)}
-#     manifold_facets = [list(map(list, facet)) for facet in unique_facets]
+    # Step 4: Remove duplicate facets
+    unique_facets = {tuple(tuple(vertex) for vertex in facet) for facet in (facets + fixed_facets)}
+    manifold_facets = [list(map(list, facet)) for facet in unique_facets]
 
-#     return manifold_facets
+    return manifold_facets
 
 
 def is_model_manifold(facets):
@@ -290,9 +281,6 @@ def clean_binary_stl_file(input_file_path, output_file_path):
 
             if not is_counterclockwise(vertex1, vertex2, vertex3, normal):
                 handle_error_with_line_index(WARNING, "Vertices of this facet are not ordered counterclockwise")
-
-            # if any(math.isnan(v) for v in normal + vertex1 + vertex2 + vertex3):
-            #     handle_error_with_file_pos(ERROR, pos, "File contains NaN values in normal or vertex coordinates")
             
             if attr_byte_count != 0:
                 handle_error_with_file_pos(ERROR, pos, f"Attribute byte count should be '0', but got '{attr_byte_count}'")
@@ -301,12 +289,21 @@ def clean_binary_stl_file(input_file_path, output_file_path):
         print("Original minimum coordinates:", min_vertex)
 
         # Close holes in the model
-        # facets = make_model_manifold(facets)
         if not is_model_manifold(facets):
-            print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
-            output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
+
+            print("Trying to make model manifold...")
+            facets = make_model_manifold(facets)
+            if not is_model_manifold(facets):
+                print("Failed!")
+
+                print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
+                output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
+            else:
+                print("Succeeded!")
         else:
             print("Model is manifold.")
+
+
 
         with open(output_file_path, 'wb') as fixed_file:
             fixed_file.write(header)
@@ -467,7 +464,6 @@ def clean_ascii_stl_file(input_file_path, output_file_path):
             adapt_vertex[i] = 0
     
     for facet in facets:
-        # print(str(facet))
         fixed_lines.append(f'{INDENT}facet normal {facet[0][0]} {facet[0][1]} {facet[0][2]}')
         fixed_lines.append(f'{INDENT}{INDENT}outer loop')
         vertices = []
@@ -493,10 +489,8 @@ def clean_stl_file(input_file_path, output_file_path):
     try:
         if is_binary_stl(input_file_path):
             clean_binary_stl_file(input_file_path, output_file_path)
-            # version = 'binary'
         else:
             clean_ascii_stl_file(input_file_path, output_file_path)
-            # version = 'ASCII'
 
         if error_count > 0:
             raise STLCleanerException(f"Validation failed: errors={error_count}, warnings={warning_count}, first error: {first_error_message}")
@@ -523,16 +517,16 @@ if __name__ == "__main__":
         print(f'--min-pos=<minimum position>         mininum allowed model position, default={new_min_pos[0]},{new_min_pos[1]},{new_min_pos[2]}')
         print(f'--force-repos                        always repositions the model to the minimum position')
         print(f'--ignore-endsolid-name               only considers the solid name')
+        print(f'--warnings                           prints all warning information to standard output')
         sys.exit(0)
-    # output_detailed_warnings = any(arg.strip().lower() == "--warnings" for arg in sys.argv)
     input_file_path = sys.argv[1]
     output_file_path = re.sub(r'\.stl$', '-cleaned.stl' , input_file_path)
+    output_detailed_warnings = any(arg.strip().lower() == "--warnings" for arg in sys.argv)
     for arg in sys.argv: 
         if arg.strip().lower() == '--force-repos':
             force_repositioning = True
         elif arg.strip().lower().startswith('--o='):
             output_file_path = arg.split('=')[1]
-            # print('Output file: ', output_file_path)
         elif arg.strip().lower().startswith('--indent='):
             indent_spaces = int(arg.split('=')[1])
         elif arg.strip().lower().startswith('--min-pos='):

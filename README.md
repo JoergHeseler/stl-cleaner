@@ -21,6 +21,7 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 | `--min-pos=<minimum position>` | mininum allowed model position, default=0.01,0.01,0.01 |
 | `--force-repos`                | always repositions the model to the minimum position   |
 | `--ignore-endsolid-name`       | only considers the solid name                          |
+| `--warnings`                   | prints all warning information to standard output      |
 
 ## Background
 
