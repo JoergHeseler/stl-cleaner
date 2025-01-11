@@ -1,10 +1,34 @@
 # STL Cleaner
 
-This repository provides a script that converts ASCII and binary Standard Tessellation Language (STL) files specified at https://www.fabbers.com/tech/STL_Format.
+## Overview
 
-## What It Does
+The STL Cleaner script validates and corrects STL files (ASCII and binary) by checking geometric integrity, ensuring counterclockwise vertex ordering, recalculating normals, and repositioning models to a defined minimum position. It outputs cleaned STL files ready for use in workflows like 3D printing or digital preservation.
 
-This script validates and corrects STL files (both ASCII and binary formats) by checking the geometric integrity of facets, ensuring counterclockwise vertex ordering, and repositioning the model to a defined minimum position if needed. It also verifies consistency between solid and endsolid names in ASCII files and outputs a cleaned, corrected version of the STL file.
+## Background
+
+Malformed STL files can disrupt 3D workflows and archiving. This tool ensures STL files comply with the specification and improves geometric accuracy. However, the model should be manifold before using this tool. Non-manifold models can be fixed using software like [Blender](https://www.blender.org/).
+
+## Making Models Manifold in Blender
+
+1. Open Blender and go to **Edit** > **Preferences** > **Add-ons**.
+
+2. Search for `3D Print Toolbox` and enable it via **Get Extensions**.
+
+3. Import your STL file (**File** > **Import** > **STL**).
+
+4. Press `N` to open the right-side panel and select the **3D Print** tab.
+
+5. In **Edit Mode**, select the model (`A`).
+
+6. Use the **3D Print Toolbox** options:
+
+Click **Check All** to identify issues.
+
+Use **Clean Up** > **Merge by Distance** to remove duplicate vertices.
+
+Click **Make Manifold** to fix non-manifold geometry.
+
+7. Recheck the model and export it as a cleaned STL (**File** > **Export** > **STL**).
 
 ## Usage
 
@@ -12,7 +36,7 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 
 2. In the command line run `python stl-cleaner.py <STL file> [options]`
 
-### Command line switches
+### Options
 
 | Option                         | Description                                            |
 | ------------------------------ | ------------------------------------------------------ |
@@ -22,10 +46,6 @@ This script validates and corrects STL files (both ASCII and binary formats) by 
 | `--force-repos`                | always repositions the model to the minimum position   |
 | `--ignore-endsolid-name`       | only considers the solid name                          |
 | `--warnings`                   | prints all warning information to standard output      |
-
-## Background
-
-As part of the [NFDI4Culture](https://nfdi4culture.de/) initiative, efforts are underway to enhance the capabilities of open-source digital preservation software like Archivematica to identify, validate and preserve 3D file formats. This repository provides a script to enable Graphics Language Transmission Format (glTF) file validation in Archivematica, which is not supported by default in version 1.13.2, enhancing its 3D content preservation capabilities.
 
 ## Dependencies
 
@@ -56,7 +76,7 @@ Special thanks to the IT colleagues at the SLUB Dresden for their support and va
 
 NFDI4Culture is a consortium within the German [National Research Data Infrastructure (NFDI)](https://www.nfdi.de/).
 
-Contact: [Jörg Heseler](https://orcid.org/0000-0002-1497-627X)
+Author: [Jörg Heseler](https://orcid.org/0000-0002-1497-627X)
 
 This repository is licensed under a [Creative Commons Attribution 4.0 International License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
 
