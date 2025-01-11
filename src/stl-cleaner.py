@@ -75,50 +75,6 @@ def is_counterclockwise(vertex1, vertex2, vertex3, normal):
     calculated_normal = cross_product(edge1, edge2)
     return dot_product(calculated_normal, normal) > 0
 
-def make_model_manifold(facets):
-    """
-    Ensures the manifoldness of the model by applying the vector-to-vector rule.
-    This involves fixing open edges and removing duplicate facets.
-    """
-    edge_to_facets = {}
-    fixed_facets = []
-    open_edges = []
-
-    # Step 1: Track edges and their associated facets
-    for facet in facets:
-        edges = [
-            tuple(sorted((tuple(facet[1]), tuple(facet[2])))),
-            tuple(sorted((tuple(facet[2]), tuple(facet[3])))),
-            tuple(sorted((tuple(facet[3]), tuple(facet[1]))))
-        ]
-        for edge in edges:
-            if edge not in edge_to_facets:
-                edge_to_facets[edge] = []
-            edge_to_facets[edge].append(facet)
-
-    # Step 2: Identify and handle open edges
-    for edge, associated_facets in edge_to_facets.items():
-        if len(associated_facets) == 1:
-            open_edges.append(edge) # Open edge found
-
-    # Step 3: Close open edges
-    for edge in open_edges:
-        v1, v2 = edge
-        # Find a vertex close to the open edge to form a new triangle
-        for other_edge in open_edges:
-            if v2 in other_edge and edge != other_edge:
-                v3 = other_edge[0] if other_edge[1] == v2 else other_edge[1]
-                new_normal = recalculate_normal(v1, v2, v3)
-                new_facet = [new_normal, v1, v2, v3]
-                fixed_facets.append(new_facet)
-                break
-
-    # Step 4: Remove duplicate facets
-    unique_facets = {tuple(tuple(vertex) for vertex in facet) for facet in (facets + fixed_facets)}
-    manifold_facets = [list(map(list, facet)) for facet in unique_facets]
-
-    return manifold_facets
-
 
 def is_model_manifold(facets):
     edge_usage = {}
@@ -288,18 +244,9 @@ def clean_binary_stl_file(input_file_path, output_file_path):
     
         print("Original minimum coordinates:", min_vertex)
 
-        # Close holes in the model
         if not is_model_manifold(facets):
-
-            print("Trying to make model manifold...")
-            facets = make_model_manifold(facets)
-            if not is_model_manifold(facets):
-                print("Failed!")
-
-                print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
-                output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
-            else:
-                print("Succeeded!")
+            print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
+            output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
         else:
             print("Model is manifold.")
 
@@ -393,20 +340,15 @@ def clean_ascii_stl_file(input_file_path, output_file_path):
             # programs are able to export
             if not re.search(f"^vertex -?\d*(\.\d+)?([Ee][+-]?\d+)? -?\d*(\.\d+)?([Ee][+-]?\d+)? -?\d*(\.\d+)?([Ee][+-]?\d+)?$", get_current_line()):
                 handle_error_with_line_index(ERROR, "vertex <unsigned float> <unsigned float> <unsigned float>", get_current_line())
-            # if not re.search(f"^vertex \d*(\.\d+)?([Ee][+-]?\d+)? \d*(\.\d+)?([Ee][+-]?\d+)? \d*(\.\d+)?([Ee][+-]?\d+)?$", get_current_line()):
-                # print_warning("vertex <unsigned float> <unsigned float> <unsigned float>", get_current_line())
             vertex = list(map(float, get_current_line().split()[1:]))
             go_to_next_line()
             for j in range(3):
                 if vertex[j] < min_vertex[j]:
                     min_vertex[j] = vertex[j]
             if any(coord < 0 for coord in vertex):
-                # all_vertex_coordinates_are_positive = False
                 handle_error_with_line_index(WARNING, "Not all vertice coordinates have positive values")
+
             vertices.append(vertex)
-        # if not is_facet_oriented_correctly(vertices[0], vertices[1], vertices[2], normal):
-        #     print_warning("Facet is not oriented correctly")
-        #     # all_facets_normals_are_correct = False
 
         normal = recalculate_normal(vertices[0], vertices[1], vertices[2])
         facets.append([normal, vertices[0], vertices[1], vertices[2]])
@@ -435,8 +377,6 @@ def clean_ascii_stl_file(input_file_path, output_file_path):
 
     print("Original minimum coordinates:", min_vertex)
 
-    # Close holes in the model
-    # facets = make_model_manifold(facets)
     if not is_model_manifold(facets):
         print("Warning: Model is not manifold, you'd better make it manifold with a 3D modeling tool before using this tool!")
         output_file_path = re.sub(r'\.stl$', '-but-not-manifold.stl', output_file_path)
