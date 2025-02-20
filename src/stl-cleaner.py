@@ -1,7 +1,7 @@
 # Title: stl-cleaner
 # Version: 1.0.0
 # Publisher: NFDI4Culture
-# Publication date: December 16, 2024
+# Publication date: February 20, 2025
 # License: CC BY-SA 4.0
 # Author: Joerg Heseler
 # References: https://www.fabbers.com/tech/STL_Format
