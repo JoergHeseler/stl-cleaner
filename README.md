@@ -22,11 +22,11 @@ Malformed STL files can disrupt 3D workflows and archiving. This tool ensures ST
 
 6. Use the **3D Print Toolbox** options:
 
-Click **Check All** to identify issues.
+   a. Click **Check All** to identify issues.
 
-Use **Clean Up** > **Merge by Distance** to remove duplicate vertices.
+   b. Use **Clean Up** > **Merge by Distance** to remove duplicate vertices.
 
-Click **Make Manifold** to fix non-manifold geometry.
+   c. Click **Make Manifold** to fix non-manifold geometry.
 
 7. Recheck the model and export it as a cleaned STL (**File** > **Export** > **STL**).
 
@@ -67,7 +67,7 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## Acknowledgments
 
-Special thanks to the IT colleagues at the SLUB Dresden for their support and valuable feedback during development.
+Special thanks to the colleagues from the SLUB Dresden, specifically from the Infrastructure and Long-Term Availability division, for their support and valuable feedback during the development.
 
 ## Imprint
 
