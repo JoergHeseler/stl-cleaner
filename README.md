@@ -8,7 +8,7 @@ The STL Cleaner script validates and corrects STL files (ASCII and binary) by ch
 
 Malformed STL files can disrupt 3D workflows and archiving. This tool ensures STL files comply with the specification and improves geometric accuracy. However, the model should be manifold before using this tool. Non-manifold models can be fixed using software like [Blender](https://www.blender.org/).
 
-## Making Models Manifold in Blender
+## Making Models Manifold in Blender 4.4
 
 1. Open Blender and go to **Edit** > **Preferences** > **Add-ons**.
 
