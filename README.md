@@ -11,29 +11,19 @@ Malformed STL files can disrupt 3D workflows and archiving. This tool ensures ST
 ## Making Models Manifold in Blender 4.4
 
 1. Open Blender and go to **Edit** > **Preferences** > **Add-ons**.
-
 2. Search for `3D Print Toolbox` and enable it via **Get Extensions**.
-
 3. Import your STL file (**File** > **Import** > **STL**).
-
 4. Press `N` to open the right-side panel and select the **3D Print** tab.
-
 5. In **Edit Mode**, select the model (`A`).
-
 6. Use the **3D Print Toolbox** options:
-
    a. Click **Check All** to identify issues.
-
    b. Use **Clean Up** > **Merge by Distance** to remove duplicate vertices.
-
    c. Click **Make Manifold** to fix non-manifold geometry.
-
 7. Recheck the model and export it as a cleaned STL (**File** > **Export** > **STL**).
 
 ## Usage
 
 1. Download [**stl-cleaner.py**](./src/stl-cleaner.py).
-
 2. In the command line run `python stl-cleaner.py <STL file> [options]`
 
 ### Options
