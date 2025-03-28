@@ -38,7 +38,7 @@ Malformed STL files can disrupt 3D workflows and archiving. This tool ensures ST
 
 ## Dependencies
 
-[Python 2.4](https://www.python.org/download/releases/2.4/) or higher and [Blender 4.4.0](https://www.blender.org/download/releases/4-4/).
+[Python 2.4](https://www.python.org/download/releases/2.4/) or higher and [Blender 4.4](https://www.blender.org/download/releases/4-4/).
 
 ## Related projects
 
