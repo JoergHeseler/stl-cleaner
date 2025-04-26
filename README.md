@@ -30,7 +30,7 @@ Incorrect STL files can disrupt 3D workflows and archiving. Some popular 3D proc
 
 **Hint: The model should be manifold before using this tool!**
 
-Non-manifold models can be fixed using software like [Blender](https://www.blender.org/).
+Non-manifold models can be fixed using software like [Blender](https://www.blender.org/):
 
 ## Making Models Manifold in Blender
 
