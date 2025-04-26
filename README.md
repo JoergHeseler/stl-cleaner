@@ -30,7 +30,7 @@ Incorrect STL files can disrupt 3D workflows and archiving. Some popular 3D proc
 
 **Note: BEFORE using the STL Cleaner, STL files should be manifold!**
 
-Non-manifold models can be corrected using 3D processing software such as [Blender](https://www.blender.org/), which provides visual feedback:
+Non-manifold models can be easily corrected using 3D processing software such as [Blender](https://www.blender.org/), which provides visual feedback:
 
 ## Making Models Manifold in Blender
 
