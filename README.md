@@ -64,17 +64,9 @@ Non-manifold models can be easily corrected using 3D processing software such as
 
 [Python 2.4](https://www.python.org/download/releases/2.4/) and [Blender 4.4](https://www.blender.org/download/releases/4-4/) were used develop and test this script.
 
-## Related projects
+## Related Projects
 
-- [DAE Validator for Archivematica](https://github.com/JoergHeseler/dae-validator-for-archivematica)
-- [glTF Metadata Extractor for Archivematica](https://github.com/JoergHeseler/gltf-metadata-extractor-for-archivematica)
-- [glTF Validator for Archivematica](https://github.com/JoergHeseler/gltf-validator-for-archivematica)
-- [Mesh Samples for Preservation Testing](https://github.com/JoergHeseler/mesh-samples-for-preservation-testing)
-- [Point Cloud Samples for Digital Preservation Testing](https://github.com/JoergHeseler/point-cloud-samples-for-preservation-testing)
-- [Siegfried Falls Back on Fido Identifier for Archivematica](https://github.com/JoergHeseler/siegfried-falls-back-on-fido-identifier-for-archivematica)
-- [STL Metadata Extractor for Archivematica](https://github.com/JoergHeseler/stl-metadata-extractor-for-archivematica)
-- [STL Validator for Archivematica](https://github.com/JoergHeseler/stl-validator-for-archivematica)
-- [X3D Validator for Archivematica](https://github.com/JoergHeseler/x3d-validator-for-archivematica)
+- [NFDI4Culture 3D Reference Implementations](https://github.com/JoergHeseler/nfdi4culture-3d-reference-implementations)
 
 ## Contributing
 
