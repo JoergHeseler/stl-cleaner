@@ -70,7 +70,7 @@ The following table compares a cube with side length 2 as an uncleaned and clean
 
 ## Related Projects
 
-- [NFDI4Culture 3D Reference Implementations](https://github.com/JoergHeseler/nfdi4culture-3d-reference-implementations)
+- [NFDI4Culture 3D Reference Implementations](https://git.slub-dresden.de/nfdi4culturedigitalpreservation/nfdi4culture-3d-reference-implementations)
 
 ## Contributing
 
